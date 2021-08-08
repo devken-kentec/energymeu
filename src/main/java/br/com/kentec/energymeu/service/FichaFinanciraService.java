@@ -1,9 +1,7 @@
 package br.com.kentec.energymeu.service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,7 @@ import br.com.kentec.energymeu.dto.ParcelaDTO;
 import br.com.kentec.energymeu.repository.CadastroRepository;
 import br.com.kentec.energymeu.repository.FichaFinanceiraRepository;
 import br.com.kentec.energymeu.repository.ParcelaRepository;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 
 @Service
 public class FichaFinanciraService {
@@ -146,36 +139,4 @@ public class FichaFinanciraService {
 		}
 	}
 	
-	public String ParcelaListReports() {
-		
-		List<ParcelaDTO> parc = pr.findAll().stream().map(ParcelaDTO::new).collect(Collectors.toList());
-		
-		String nome = parc.get(0).getNome();
-		String cpf = parc.get(0).getCpf();
-		
-		try {
-			String reportPath = "C:\\reports";
-			String destPath = "C:\\relatorios";
-			
-			JasperReport jasperReport = JasperCompileManager.compileReport(reportPath + "\\mensalidade.jrxml");
-			JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(parc);
-			
-			Map<String, Object> parameters = new HashMap<>();
-			parameters.put("Criado por:", "KENTEC - Soluções em Informática");
-			parameters.put("aluno", nome);
-			parameters.put("cpf", cpf);
-			
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
-			
-			String nomeArquivo = "\\Parcelas-Aluno-"+nome.substring(0,10)+"-"+LocalDateTime.now().toString().replace(":", " ")+".pdf";
-			JasperExportManager.exportReportToPdfFile(jasperPrint, destPath + nomeArquivo);
-			System.out.println("Gerado");
-			
-			return "Report successfully generated @path= "+destPath;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
-		}
-	}
 }

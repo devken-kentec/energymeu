@@ -123,10 +123,5 @@ public class FichaFinanceiraController {
 		ffs.delete(id);
 	}
 	
-	@GetMapping("/relparc/{id}")
-	public String printParcela(@PathVariable("id") Long id) {
-		String msg = ffs.ParcelaListReports();
-		System.out.println(msg);
-		return msg;
-	}
+
 }

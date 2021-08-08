@@ -1,8 +1,6 @@
 package br.com.kentec.energymeu.service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.Part;
 
@@ -12,20 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import br.com.kentec.energymeu.domain.Cadastro;
-import br.com.kentec.energymeu.dto.CadastroRelatorioDTO;
+
 import br.com.kentec.energymeu.repository.CadastroRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
 
 
 @Service
@@ -104,71 +95,7 @@ public class CadastroService {
 	
 	
 
-	public String cadastroListReports() {
-		
-		List<CadastroRelatorioDTO> cad = cr.findAll().stream().map(CadastroRelatorioDTO::new).collect(Collectors.toList());
-		
-		try {
-			
-			String reportPath = "C:\\reports";
-			String destPath = "C:\\relatorios";
-			
-			JasperReport jasperReport = JasperCompileManager.compileReport(reportPath + "\\cadDetail.jrxml");
-			
-			JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(cad);
-			
-			Map<String, Object> parameters = new HashMap<>();
 
-			parameters.put("createdBy", "KENTEC - Soluções em Informática");
-			
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
-			
-			JasperExportManager.exportReportToPdfFile(jasperPrint, destPath + "\\cadastroList.pdf");
-
-			System.out.println("Done");
-			
-			return "Report successfully generated @path= " + destPath;
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			return e.getMessage();
-		}
-	}
-	
-	public String cadastroReports(Long id) {
-		
-		List<CadastroRelatorioDTO> cad = cr.findByIdc(id).stream().map(CadastroRelatorioDTO::new).collect(Collectors.toList());
-		
-		try {
-			
-			String reportPath = "C:\\reports";
-			String destPath = "C:\\relatorios";
-			
-			JasperReport jasperReport = JasperCompileManager.compileReport(reportPath + "\\cadAluno.jrxml");
-			
-					
-			JRBeanCollectionDataSource jrBeanCollectionDataSource = new JRBeanCollectionDataSource(cad);
-			
-			Map<String, Object> parameters = new HashMap<>();
-
-			parameters.put("createdBy", "KENTEC - Soluções em Informática");
-			
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrBeanCollectionDataSource);
-			
-			JasperExportManager.exportReportToPdfFile(jasperPrint, destPath + "\\cadastro.pdf");
-
-			System.out.println("Done");
-			
-			return "Report successfully generated @path= " + destPath;
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			return e.getMessage();
-		}
-		
-	}
 	
 	public byte[] adicionarFoto(Part arquivo, Long id) {
 		
